@@ -5,6 +5,7 @@ module "module_azurerm_network_interface" {
 
   resource_group_name           = each.value.resource_group_name
   location                      = each.value.location
+
   name                          = each.value.name
   enable_ip_forwarding          = each.value.enable_ip_forwarding
   enable_accelerated_networking = each.value.enable_accelerated_networking

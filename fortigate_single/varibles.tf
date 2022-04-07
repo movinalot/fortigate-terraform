@@ -22,6 +22,21 @@ variable "virtual_network_address_space" {
   default     = []
 }
 
+variable "connect_to_fmg" {
+  default = ""
+}
+
+variable "license_type" {
+  default = "payg"
+}
+
+variable "forti_manager_ip" {
+  default = ""
+}
+
+variable "forti_manager_serial" {
+  default = ""
+}
 
 variable "enable_module_output" {
   description = "Enable/Disable module output"

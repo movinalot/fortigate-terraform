@@ -52,11 +52,11 @@ locals {
   }
 
   network_interfaces = {
-    "nic_fortigate_1" = {
+    "nic_fortigate_1_1" = {
       resource_group_name = module.module_azurerm_resource_group[var.resource_group_name].resource_group.name
       location            = module.module_azurerm_resource_group[var.resource_group_name].resource_group.location
 
-      name                          = "nic_fortigate_1"
+      name                          = "nic_fortigate_1_1"
       enable_ip_forwarding          = true
       enable_accelerated_networking = true
       ip_configurations = [
@@ -69,11 +69,11 @@ locals {
         }
       ]
     },
-    "nic_fortigate_2" = {
+    "nic_fortigate_1_2" = {
       resource_group_name = module.module_azurerm_resource_group[var.resource_group_name].resource_group.name
       location            = module.module_azurerm_resource_group[var.resource_group_name].resource_group.location
 
-      name                          = "nic_fortigate_2"
+      name                          = "nic_fortigate_1_2"
       enable_ip_forwarding          = true
       enable_accelerated_networking = true
       ip_configurations = [
@@ -103,7 +103,7 @@ locals {
 
       name                   = "r_default"
       address_prefix         = "0.0.0.0/0"
-      next_hop_in_ip_address = module.module_azurerm_network_interface["nic_fortigate_2"].network_interface.private_ip_address
+      next_hop_in_ip_address = module.module_azurerm_network_interface["nic_fortigate_1_2"].network_interface.private_ip_address
       next_hop_type          = "VirtualAppliance"
       route_table_name       = module.module_azurerm_route_table["rt_protected"].route_table.name
     }
@@ -246,8 +246,8 @@ locals {
       delete_os_disk_on_termination    = true
       delete_data_disks_on_termination = true
 
-      network_interface_ids        = [for nic in ["nic_fortigate_1", "nic_fortigate_2"] : module.module_azurerm_network_interface[nic].network_interface.id]
-      primary_network_interface_id = module.module_azurerm_network_interface["nic_fortigate_1"].network_interface.id
+      network_interface_ids        = [for nic in ["nic_fortigate_1_1", "nic_fortigate_1_2"] : module.module_azurerm_network_interface[nic].network_interface.id]
+      primary_network_interface_id = module.module_azurerm_network_interface["nic_fortigate_1_1"].network_interface.id
 
       public_ip_address = module.module_azurerm_public_ip["pip_fgt"].public_ip.ip_address
 
@@ -288,15 +288,22 @@ locals {
       # FortiGate Configuration
       config_data = templatefile(
         "./fortios_config.conf", {
-          host_name            = "vm-fgt"
-          connect_to_fmg       = ""
-          license_type         = ""
-          license_file         = ""
-          serial_number        = ""
-          license_token        = ""
-          forti_manager_ip     = ""
-          forti_manager_serial = ""
-          api_key              = random_string.string.id
+          host_name               = "vm-fgt"
+          connect_to_fmg          = var.connect_to_fmg
+          license_type            = var.license_type
+          forti_manager_ip        = var.forti_manager_ip
+          forti_manager_serial    = var.forti_manager_serial
+          license_file            = ""
+          serial_number           = ""
+          license_token           = ""
+          api_key                 = random_string.string.id
+          vnet_address_prefix     = module.module_azurerm_virtual_network["vnet_security"].virtual_network.address_space[0]
+          external_subnet_gateway = cidrhost(module.module_azurerm_subnet["external"].subnet.address_prefix, 1)
+          internal_subnet_gateway = cidrhost(module.module_azurerm_subnet["internal"].subnet.address_prefix, 1)
+          port1_ip                = module.module_azurerm_network_interface["nic_fortigate_1_1"].network_interface.private_ip_address
+          port1_netmask           = cidrnetmask(module.module_azurerm_subnet["external"].subnet.address_prefix)
+          port2_ip                = module.module_azurerm_network_interface["nic_fortigate_1_2"].network_interface.private_ip_address
+          port2_netmask           = cidrnetmask(module.module_azurerm_subnet["internal"].subnet.address_prefix)
         }
       )
     }

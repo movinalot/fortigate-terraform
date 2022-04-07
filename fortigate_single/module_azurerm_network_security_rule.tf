@@ -4,6 +4,7 @@ module "module_azurerm_network_security_rule" {
   source = "../azure/rm/azurerm_network_security_rule"
 
   resource_group_name         = each.value.resource_group_name
+
   name                        = each.value.name
   priority                    = each.value.priority
   direction                   = each.value.direction
@@ -17,5 +18,5 @@ module "module_azurerm_network_security_rule" {
 }
 
 output "network_security_rules" {
-  value = module.module_azurerm_network_security_rule[*]
+  value =  var.enable_module_output ? module.module_azurerm_network_security_rule[*] : null
 }
