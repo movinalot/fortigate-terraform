@@ -64,7 +64,7 @@ locals {
           name                          = "ipconfig1"
           subnet_id                     = module.module_azurerm_subnet["external"].subnet.id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["external"].subnet.address_prefix, 4)
+          private_ip_address            = cidrhost(module.module_azurerm_subnet["external"].subnet.address_prefixes[0], 4)
           public_ip_address_id          = module.module_azurerm_public_ip["pip_fgt"].public_ip.id
         }
       ]
@@ -81,7 +81,7 @@ locals {
           name                          = "ipconfig1"
           subnet_id                     = module.module_azurerm_subnet["internal"].subnet.id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["internal"].subnet.address_prefix, 4)
+          private_ip_address            = cidrhost(module.module_azurerm_subnet["internal"].subnet.address_prefixes[0], 4)
           public_ip_address_id          = null
         }
       ]
@@ -298,12 +298,12 @@ locals {
           license_token           = ""
           api_key                 = random_string.string.id
           vnet_address_prefix     = module.module_azurerm_virtual_network["vnet_security"].virtual_network.address_space[0]
-          external_subnet_gateway = cidrhost(module.module_azurerm_subnet["external"].subnet.address_prefix, 1)
-          internal_subnet_gateway = cidrhost(module.module_azurerm_subnet["internal"].subnet.address_prefix, 1)
+          external_subnet_gateway = cidrhost(module.module_azurerm_subnet["external"].subnet.address_prefixes[0], 1)
+          internal_subnet_gateway = cidrhost(module.module_azurerm_subnet["internal"].subnet.address_prefixes[0], 1)
           port1_ip                = module.module_azurerm_network_interface["nic_fortigate_1_1"].network_interface.private_ip_address
-          port1_netmask           = cidrnetmask(module.module_azurerm_subnet["external"].subnet.address_prefix)
+          port1_netmask           = cidrnetmask(module.module_azurerm_subnet["external"].subnet.address_prefixes[0])
           port2_ip                = module.module_azurerm_network_interface["nic_fortigate_1_2"].network_interface.private_ip_address
-          port2_netmask           = cidrnetmask(module.module_azurerm_subnet["internal"].subnet.address_prefix)
+          port2_netmask           = cidrnetmask(module.module_azurerm_subnet["internal"].subnet.address_prefixes[0])
         }
       )
     }
