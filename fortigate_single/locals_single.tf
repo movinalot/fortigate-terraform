@@ -68,7 +68,7 @@ locals {
           public_ip_address_id          = module.module_azurerm_public_ip["pip_fgt"].public_ip.id
         }
       ]
-    },
+    }
     "nic_fortigate_1_2" = {
       resource_group_name = module.module_azurerm_resource_group[var.resource_group_name].resource_group.name
       location            = module.module_azurerm_resource_group[var.resource_group_name].resource_group.location

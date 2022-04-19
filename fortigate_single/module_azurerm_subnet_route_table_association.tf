@@ -8,5 +8,5 @@ module "module_azurerm_subnet_route_table_association" {
 }
 
 output "subnet_route_table_associations" {
-  value =  var.enable_module_output ? module.module_azurerm_subnet_route_table_association[*] : null
+  value = var.enable_module_output ? module.module_azurerm_subnet_route_table_association[*] : null
 }

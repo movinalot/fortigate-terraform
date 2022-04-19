@@ -5,9 +5,9 @@ module "module_azurerm_subnet" {
 
   resource_group_name = each.value.resource_group_name
 
-  name                = each.value.name
-  vnet_name           = each.value.vnet_name
-  address_prefixes    = each.value.address_prefixes
+  name             = each.value.name
+  vnet_name        = each.value.vnet_name
+  address_prefixes = each.value.address_prefixes
 }
 
 output "subnets" {

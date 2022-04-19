@@ -6,7 +6,7 @@ module "module_azurerm_route_table" {
   resource_group_name = each.value.resource_group_name
   location            = each.value.location
 
-  name                = each.value.name
+  name = each.value.name
 }
 
 output "route_tables" {

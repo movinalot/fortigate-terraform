@@ -6,7 +6,7 @@ module "module_azurerm_virtual_machine" {
   resource_group_name = each.value.resource_group_name
   location            = each.value.location
 
-  name                = each.value.name
+  name = each.value.name
 
   availability_set_id = each.value.availability_set_id
 

@@ -3,8 +3,8 @@ module "module_azurerm_storage_account" {
 
   source = "../azure/rm/azurerm_storage_account"
 
-  resource_group_name      = each.value.resource_group_name
-  location                 = each.value.location
+  resource_group_name = each.value.resource_group_name
+  location            = each.value.location
 
   name                     = each.value.name
   account_replication_type = each.value.account_replication_type
