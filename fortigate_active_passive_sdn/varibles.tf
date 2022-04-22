@@ -16,6 +16,22 @@ variable "virtual_network_name" {
   default     = ""
 }
 
+variable "connect_to_fmg" {
+  default = ""
+}
+
+variable "license_type" {
+  default = "payg"
+}
+
+variable "forti_manager_ip" {
+  default = ""
+}
+
+variable "forti_manager_serial" {
+  default = ""
+}
+
 variable "virtual_network_address_space" {
   description = "virtual_network_address_space"
   type        = list(string)
