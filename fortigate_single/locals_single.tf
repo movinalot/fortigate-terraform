@@ -226,8 +226,9 @@ locals {
     "fortinet" = {
       publisher = "fortinet"
       offer     = "fortinet_fortigate-vm_v5"
-      sku       = "fortinet_fg-vm_payg_20190624"
-      version   = "7.0.5"
+      sku       = var.fortigate_sku
+      version   = var.fortigate_ver
+      vm_size   = var.fortigate_size
     }
   }
 
@@ -251,7 +252,7 @@ locals {
 
       public_ip_address = module.module_azurerm_public_ip["pip_fgt"].public_ip.ip_address
 
-      vm_size = "Standard_F4s"
+      vm_size = local.vm_image["fortinet"].vm_size
 
       storage_image_reference_publisher = local.vm_image["fortinet"].publisher
       storage_image_reference_offer     = local.vm_image["fortinet"].offer
@@ -293,7 +294,7 @@ locals {
           license_type            = var.license_type
           forti_manager_ip        = var.forti_manager_ip
           forti_manager_serial    = var.forti_manager_serial
-          license_file            = ""
+          license_file            = "${path.module}/${var.fortigate_1_license_file}"
           serial_number           = ""
           license_token           = ""
           api_key                 = random_string.string.id
