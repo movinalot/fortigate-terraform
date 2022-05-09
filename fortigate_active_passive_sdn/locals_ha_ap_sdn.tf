@@ -319,10 +319,10 @@ locals {
       destination_address_prefix  = "*"
       network_security_group_name = module.module_azurerm_network_security_group["nsg_internal"].network_security_group.name
     },
-    "nsr_internal_iegress" = {
+    "nsr_internal_egress" = {
       resource_group_name = module.module_azurerm_resource_group[var.resource_group_name].resource_group.name
 
-      name                        = "nsr_internal_iegress"
+      name                        = "nsr_internal_egress"
       priority                    = 1004
       direction                   = "Outbound"
       access                      = "Allow"
