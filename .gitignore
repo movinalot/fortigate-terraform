@@ -32,3 +32,4 @@ backend.tf
 my_vars.cfg
 creds.sh
 terraform.tfvars
+*.lic
