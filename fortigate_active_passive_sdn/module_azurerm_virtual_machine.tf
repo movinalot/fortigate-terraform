@@ -1,5 +1,3 @@
-data "azurerm_subscription" "subscription" {
-}
 module "module_azurerm_virtual_machine" {
   for_each = local.virtual_machines
 
@@ -46,11 +44,9 @@ module "module_azurerm_virtual_machine" {
 
   os_profile_linux_config_disable_password_authentication = each.value.os_profile_linux_config_disable_password_authentication
 
-  boot_diagnostics_enabled     = each.value.boot_diagnostics_enabled
-  boot_diagnostics_storage_uri = each.value.boot_diagnostics_storage_uri
+  boot_diagnostics_enabled = each.value.boot_diagnostics_enabled
 
   zones = each.value.zones
-
 }
 
 output "virtual_machines" {

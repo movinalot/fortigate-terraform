@@ -8,6 +8,7 @@ module "module_azurerm_availability_set" {
 
   name = each.value.name
 
+
   platform_update_domain_count = each.value.platform_update_domain_count
   platform_fault_domain_count  = each.value.platform_fault_domain_count
   proximity_placement_group_id = each.value.proximity_placement_group_id
