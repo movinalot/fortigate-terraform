@@ -1,4 +1,4 @@
-variable "enable_module_output" {
-  description = "Enable/Disable module output"
+variable "enable_output" {
+  description = "Enable/Disable output"
   default     = false
 }

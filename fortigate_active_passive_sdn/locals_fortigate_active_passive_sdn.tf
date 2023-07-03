@@ -41,24 +41,24 @@ locals {
 
   public_ips = {
     "pip-fgt" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name              = "pip-fgt"
       allocation_method = "Static"
       sku               = "Standard"
     }
     "pip-fgt_1_mgmt" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name              = "pip-fgt_1_mgmt"
       allocation_method = "Static"
       sku               = "Standard"
     }
     "pip-fgt_2_mgmt" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name              = "pip-fgt_2_mgmt"
       allocation_method = "Static"
@@ -68,8 +68,8 @@ locals {
 
   availability_sets = {
     "avail-1" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name                         = "avail-1"
       platform_update_domain_count = "2"
@@ -81,56 +81,56 @@ locals {
 
   virtual_networks = {
     "vnet-security" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name          = "vnet-security"
+      name          = local.virtual_network_name
       address_space = ["172.16.136.0/22"]
     }
   }
 
   subnets = {
     "snet-external" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name             = "snet-external"
-      vnet_name        = module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.name
-      address_prefixes = [cidrsubnet(module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.address_space[0], 4, 0)]
+      name                 = "snet-external"
+      virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
+      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 0)]
     }
     "snet-internal" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name             = "snet-internal"
-      vnet_name        = module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.name
-      address_prefixes = [cidrsubnet(module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.address_space[0], 4, 1)]
+      name                 = "snet-internal"
+      virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
+      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 1)]
     }
     "snet-hasync" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name             = "snet-hasync"
-      vnet_name        = module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.name
-      address_prefixes = [cidrsubnet(module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.address_space[0], 4, 2)]
+      name                 = "snet-hasync"
+      virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
+      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 2)]
     }
     "snet-mgmt" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name             = "snet-mgmt"
-      vnet_name        = module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.name
-      address_prefixes = [cidrsubnet(module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.address_space[0], 4, 3)]
+      name                 = "snet-mgmt"
+      virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
+      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 3)]
     }
     "snet-protected" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name             = "snet-protected"
-      vnet_name        = module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.name
-      address_prefixes = [cidrsubnet(module.module_azurerm_virtual_network[local.virtual_network_name].virtual_network.address_space[0], 2, 1)]
+      name                 = "snet-protected"
+      virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
+      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 2, 1)]
     }
   }
 
   network_interfaces = {
     "nic-fortigate_1_1" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name                          = "nic-fortigate_1_1"
       enable_ip_forwarding          = true
@@ -139,16 +139,16 @@ locals {
         {
           name                          = "ipconfig1"
           primary                       = true
-          subnet_id                     = module.module_azurerm_subnet["snet-external"].subnet.id
+          subnet_id                     = azurerm_subnet.subnet["snet-external"].id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["snet-external"].subnet.address_prefixes[0], 4)
-          public_ip_address_id          = module.module_azurerm_public_ip["pip-fgt"].public_ip.id
+          private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-external"].address_prefixes[0], 4)
+          public_ip_address_id          = azurerm_public_ip.public_ip["pip-fgt"].id
         }
       ]
     }
     "nic-fortigate_1_2" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name                          = "nic-fortigate_1_2"
       enable_ip_forwarding          = true
@@ -157,16 +157,16 @@ locals {
         {
           name                          = "ipconfig1"
           primary                       = true
-          subnet_id                     = module.module_azurerm_subnet["snet-internal"].subnet.id
+          subnet_id                     = azurerm_subnet.subnet["snet-internal"].id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["snet-internal"].subnet.address_prefixes[0], 4)
+          private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-internal"].address_prefixes[0], 4)
           public_ip_address_id          = null
         }
       ]
     }
     "nic-fortigate_1_3" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name                          = "nic-fortigate_1_3"
       enable_ip_forwarding          = true
@@ -175,16 +175,16 @@ locals {
         {
           name                          = "ipconfig1"
           primary                       = true
-          subnet_id                     = module.module_azurerm_subnet["snet-hasync"].subnet.id
+          subnet_id                     = azurerm_subnet.subnet["snet-hasync"].id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["snet-hasync"].subnet.address_prefixes[0], 4)
+          private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-hasync"].address_prefixes[0], 4)
           public_ip_address_id          = null
         }
       ]
     }
     "nic-fortigate_1_4" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name                          = "nic-fortigate_1_4"
       enable_ip_forwarding          = true
@@ -193,16 +193,16 @@ locals {
         {
           name                          = "ipconfig1"
           primary                       = true
-          subnet_id                     = module.module_azurerm_subnet["snet-mgmt"].subnet.id
+          subnet_id                     = azurerm_subnet.subnet["snet-mgmt"].id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["snet-mgmt"].subnet.address_prefixes[0], 4)
-          public_ip_address_id          = module.module_azurerm_public_ip["pip-fgt_1_mgmt"].public_ip.id
+          private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-mgmt"].address_prefixes[0], 4)
+          public_ip_address_id          = azurerm_public_ip.public_ip["pip-fgt_1_mgmt"].id
         }
       ]
     }
     "nic-fortigate_2_1" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name                          = "nic-fortigate_2_1"
       enable_ip_forwarding          = true
@@ -211,16 +211,16 @@ locals {
         {
           name                          = "ipconfig1"
           primary                       = true
-          subnet_id                     = module.module_azurerm_subnet["snet-external"].subnet.id
+          subnet_id                     = azurerm_subnet.subnet["snet-external"].id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["snet-external"].subnet.address_prefixes[0], 5)
+          private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-external"].address_prefixes[0], 5)
           public_ip_address_id          = null
         }
       ]
     }
     "nic-fortigate_2_2" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name                          = "nic-fortigate_2_2"
       enable_ip_forwarding          = true
@@ -229,16 +229,16 @@ locals {
         {
           name                          = "ipconfig1"
           primary                       = true
-          subnet_id                     = module.module_azurerm_subnet["snet-internal"].subnet.id
+          subnet_id                     = azurerm_subnet.subnet["snet-internal"].id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["snet-internal"].subnet.address_prefixes[0], 5)
+          private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-internal"].address_prefixes[0], 5)
           public_ip_address_id          = null
         }
       ]
     }
     "nic-fortigate_2_3" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name                          = "nic-fortigate_2_3"
       enable_ip_forwarding          = true
@@ -247,16 +247,16 @@ locals {
         {
           name                          = "ipconfig1"
           primary                       = true
-          subnet_id                     = module.module_azurerm_subnet["snet-hasync"].subnet.id
+          subnet_id                     = azurerm_subnet.subnet["snet-hasync"].id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["snet-hasync"].subnet.address_prefixes[0], 5)
+          private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-hasync"].address_prefixes[0], 5)
           public_ip_address_id          = null
         }
       ]
     }
     "nic-fortigate_2_4" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name                          = "nic-fortigate_2_4"
       enable_ip_forwarding          = true
@@ -265,10 +265,10 @@ locals {
         {
           name                          = "ipconfig1"
           primary                       = true
-          subnet_id                     = module.module_azurerm_subnet["snet-mgmt"].subnet.id
+          subnet_id                     = azurerm_subnet.subnet["snet-mgmt"].id
           private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["snet-mgmt"].subnet.address_prefixes[0], 5)
-          public_ip_address_id          = module.module_azurerm_public_ip["pip-fgt_2_mgmt"].public_ip.id
+          private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-mgmt"].address_prefixes[0], 5)
+          public_ip_address_id          = azurerm_public_ip.public_ip["pip-fgt_2_mgmt"].id
         }
       ]
     }
@@ -276,8 +276,8 @@ locals {
 
   route_tables = {
     "rt-protected" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name = "rt-protected"
     }
@@ -285,33 +285,33 @@ locals {
 
   routes = {
     "udr-default" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                   = "rt-default"
       address_prefix         = "0.0.0.0/0"
-      next_hop_in_ip_address = module.module_azurerm_network_interface["nic-fortigate_1_2"].network_interface.private_ip_address
+      next_hop_in_ip_address = azurerm_network_interface.network_interface["nic-fortigate_1_2"].private_ip_address
       next_hop_type          = "VirtualAppliance"
-      route_table_name       = module.module_azurerm_route_table["rt-protected"].route_table.name
+      route_table_name       = azurerm_route_table.route_table["rt-protected"].name
     }
   }
 
   subnet_route_table_associations = {
     "snet-protected" = {
-      subnet_id      = module.module_azurerm_subnet["snet-protected"].subnet.id
-      route_table_id = module.module_azurerm_route_table["rt-protected"].route_table.id
+      subnet_id      = azurerm_subnet.subnet["snet-protected"].id
+      route_table_id = azurerm_route_table.route_table["rt-protected"].id
     }
   }
 
   network_security_groups = {
     "nsg-external" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name = "nsg-external"
     }
     "nsg-internal" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name = "nsg-internal"
     }
@@ -319,7 +319,7 @@ locals {
 
   network_security_rules = {
     "nsgsr-external_ingress" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                        = "nsgsr-external_ingress"
       priority                    = 1001
@@ -330,10 +330,10 @@ locals {
       destination_port_range      = "*"
       source_address_prefix       = "*"
       destination_address_prefix  = "*"
-      network_security_group_name = module.module_azurerm_network_security_group["nsg-external"].network_security_group.name
+      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-external"].name
     },
     "nsgsr-external_egress" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                        = "nsgsr-external_egress"
       priority                    = 1002
@@ -344,10 +344,10 @@ locals {
       destination_port_range      = "*"
       source_address_prefix       = "*"
       destination_address_prefix  = "*"
-      network_security_group_name = module.module_azurerm_network_security_group["nsg-external"].network_security_group.name
+      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-external"].name
     },
     "nsgsr-internal_ingress" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                        = "nsgsr-internal_ingress"
       priority                    = 1003
@@ -358,10 +358,10 @@ locals {
       destination_port_range      = "*"
       source_address_prefix       = "*"
       destination_address_prefix  = "*"
-      network_security_group_name = module.module_azurerm_network_security_group["nsg-internal"].network_security_group.name
+      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-internal"].name
     },
     "nsgsr-internal_egress" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                        = "nsgsr-internal_egress"
       priority                    = 1004
@@ -372,34 +372,33 @@ locals {
       destination_port_range      = "*"
       source_address_prefix       = "*"
       destination_address_prefix  = "*"
-      network_security_group_name = module.module_azurerm_network_security_group["nsg-internal"].network_security_group.name
+      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-internal"].name
     }
   }
-
 
   subnet_network_security_group_associations = {
     "snet-external" = {
-      subnet_id                 = module.module_azurerm_subnet["snet-external"].subnet.id
-      network_security_group_id = module.module_azurerm_network_security_group["nsg-external"].network_security_group.id
+      subnet_id                   = azurerm_subnet.subnet["snet-external"].id
+      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-external"].id
     }
     "snet-internal" = {
-      subnet_id                 = module.module_azurerm_subnet["snet-internal"].subnet.id
-      network_security_group_id = module.module_azurerm_network_security_group["nsg-internal"].network_security_group.id
+      subnet_id                   = azurerm_subnet.subnet["snet-internal"].id
+      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-internal"].id
     }
     "snet-hasync" = {
-      subnet_id                 = module.module_azurerm_subnet["snet-hasync"].subnet.id
-      network_security_group_id = module.module_azurerm_network_security_group["nsg-internal"].network_security_group.id
+      subnet_id                   = azurerm_subnet.subnet["snet-hasync"].id
+      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-internal"].id
     }
     "snet-mgmt" = {
-      subnet_id                 = module.module_azurerm_subnet["snet-mgmt"].subnet.id
-      network_security_group_id = module.module_azurerm_network_security_group["nsg-internal"].network_security_group.id
+      subnet_id                   = azurerm_subnet.subnet["snet-mgmt"].id
+      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-internal"].id
     }
   }
-
+  /*
   virtual_machines = {
     "vm_fgt_1" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].resource_group.name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].resource_group.location
 
       name              = "vm-fgt-1"
       identity_identity = "SystemAssigned"
@@ -476,7 +475,7 @@ locals {
           mgmt_subnet_gateway     = cidrhost(module.module_azurerm_subnet["snet-mgmt"].subnet.address_prefixes[0], 1)
           ha_priority             = 255
           ha_peer                 = module.module_azurerm_network_interface["nic-fortigate_2_3"].network_interface.private_ip_address
-          sdn_resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+          sdn_resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].resource_group.name
           sdn_nic_name            = module.module_azurerm_network_interface["nic-fortigate_1_1"].network_interface.name
           sdn_nic_config_name     = "ipconfig1"
           sdn_public_ip_name      = module.module_azurerm_public_ip["pip-fgt"].public_ip.name
@@ -488,8 +487,8 @@ locals {
       )
     }
     "vm_fgt_2" = {
-      resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[local.resource_group_name].resource_group.location
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].resource_group.name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].resource_group.location
 
       name              = "vm-fgt-2"
       identity_identity = "SystemAssigned"
@@ -566,7 +565,7 @@ locals {
           mgmt_subnet_gateway     = cidrhost(module.module_azurerm_subnet["snet-mgmt"].subnet.address_prefixes[0], 1)
           ha_priority             = 1
           ha_peer                 = module.module_azurerm_network_interface["nic-fortigate_1_3"].network_interface.private_ip_address
-          sdn_resource_group_name = module.module_azurerm_resource_group[local.resource_group_name].resource_group.name
+          sdn_resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].resource_group.name
           sdn_nic_name            = module.module_azurerm_network_interface["nic-fortigate_2_1"].network_interface.name
           sdn_nic_config_name     = "ipconfig1"
           sdn_public_ip_name      = module.module_azurerm_public_ip["pip-fgt"].public_ip.name
@@ -581,14 +580,15 @@ locals {
 
   role_assignments = {
     "vm_fgt_1" = {
-      scope                = module.module_azurerm_resource_group[local.resource_group_name].resource_group.id
+      scope                = azurerm_resource_group.resource_group[local.resource_group_name].resource_group.id
       role_definition_name = "Contributor"
       principal_id         = module.module_azurerm_virtual_machine["vm_fgt_1"].virtual_machine.identity[0].principal_id
     }
     "vm_fgt_2" = {
-      scope                = module.module_azurerm_resource_group[local.resource_group_name].resource_group.id
+      scope                = azurerm_resource_group.resource_group[local.resource_group_name].resource_group.id
       role_definition_name = "Contributor"
       principal_id         = module.module_azurerm_virtual_machine["vm_fgt_2"].virtual_machine.identity[0].principal_id
     }
   }
+*/
 }

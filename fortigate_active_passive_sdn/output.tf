@@ -3,15 +3,15 @@ output "ResourceGroup_Location" {
 }
 
 output "FortiGate_Public_IP" {
-  value = format("https://%s", module.module_azurerm_public_ip["pip-fgt"].public_ip.ip_address)
+  value = format("https://%s", azurerm_public_ip.public_ip["pip-fgt"].ip_address)
 }
 
 output "FortiGate_1_Public_IP_MGMT" {
-  value = format("https://%s", module.module_azurerm_public_ip["pip-fgt_1_mgmt"].public_ip.ip_address)
+  value = format("https://%s", azurerm_public_ip.public_ip["pip-fgt_1_mgmt"].ip_address)
 }
 
 output "FortiGate_2_Public_IP_MGMT" {
-  value = format("https://%s", module.module_azurerm_public_ip["pip-fgt_2_mgmt"].public_ip.ip_address)
+  value = format("https://%s", azurerm_public_ip.public_ip["pip-fgt_2_mgmt"].ip_address)
 }
 
 output "credentials" {
