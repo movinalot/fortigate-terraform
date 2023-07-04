@@ -29,7 +29,7 @@ override.tf.json
 # example: *tfplan*
 .vscode
 backend.tf
-my_vars.cfg
+*.cfg
 creds.sh
 terraform.tfvars
 *.lic

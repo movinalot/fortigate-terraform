@@ -14,8 +14,8 @@ locals {
   fortigate_1_license_file = ""
   fortigate_2_license_file = ""
 
-  fortigate_1_license_token = "49DFECA864FE4A69BC07"
-  fortigate_2_license_token = "4583B1FEEDF5451A9258"
+  fortigate_1_license_token = ""
+  fortigate_2_license_token = ""
 
   connect_to_fmg       = ""
   forti_manager_ip     = ""
@@ -28,7 +28,7 @@ locals {
       sku          = "fortinet_fg-vm" # byol and flex use: fortinet_fg-vm | payg use: fortinet_fg-vm_payg_2022
       vm_size      = "Standard_D8s_v4"
       version      = "latest" # an be a verrsion number as well, e.g. 6.4.9, 7.0.6, 7.2.5, 7.4.0
-      license_type = "flex"   # can be byol, flex, or payg, make sure the license is correct for the sku
+      license_type = "payg"   # can be byol, flex, or payg, make sure the license is correct for the sku
     }
   }
 

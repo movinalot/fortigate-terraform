@@ -65,19 +65,6 @@ resource "azurerm_virtual_machine" "virtual_machine" {
   }
 }
 
-# resource "local_sensitive_file" "tempalte_file" {
-#   for_each = local.virtual_machines
-#   filename = format("../fortios/fortios_%s.cfg", each.value.name)
-#   content = templatefile("${each.value.os_profile_custom_data}", {
-#     hostname      = each.value.name
-#     api_key       = each.value.os_profile_custom_data_api_key
-#     license_type  = each.value.os_profile_custom_data_license_type
-#     license_file  = each.value.os_profile_custom_data_license_file
-#     license_token = each.value.os_profile_custom_data_license_token
-#   })
-# }
-
-
 output "virtual_machines" {
   value     = var.enable_output ? azurerm_virtual_machine.virtual_machine[*] : null
   sensitive = true
