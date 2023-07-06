@@ -21,14 +21,15 @@ locals {
   forti_manager_ip     = ""
   forti_manager_serial = ""
 
+  license_type = "payg"   # can be byol, flex, or payg, make sure the license is correct for the sku
+
   vm_image = {
     "fortigate" = {
       publisher    = "fortinet"
       offer        = "fortinet_fortigate-vm_v5"
-      sku          = "fortinet_fg-vm" # byol and flex use: fortinet_fg-vm | payg use: fortinet_fg-vm_payg_2022
+      sku          = local.license_type == "payg" ? "fortinet_fg-vm_payg_2022" : "fortinet_fg-vm" # byol and flex use: fortinet_fg-vm | payg use: fortinet_fg-vm_payg_2022
       vm_size      = "Standard_D8s_v4"
-      version      = "latest" # an be a verrsion number as well, e.g. 6.4.9, 7.0.6, 7.2.5, 7.4.0
-      license_type = "payg"   # can be byol, flex, or payg, make sure the license is correct for the sku
+      version      = "7.2.5" # an be a verrsion number as well, e.g. 6.4.9, 7.0.6, 7.2.5, 7.4.0
     }
   }
 
@@ -447,7 +448,7 @@ locals {
         "./fortios_config.conf", {
           host_name               = "vm-fgt-1"
           connect_to_fmg          = local.connect_to_fmg
-          license_type            = local.vm_image["fortigate"].license_type
+          license_type            = local.license_type
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
           license_file            = "${path.module}/${local.fortigate_1_license_file}"
@@ -536,7 +537,7 @@ locals {
         "./fortios_config.conf", {
           host_name               = "vm-fgt-2"
           connect_to_fmg          = local.connect_to_fmg
-          license_type            = local.vm_image["fortigate"].license_type
+          license_type            = local.license_type
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
           license_file            = "${path.module}/${local.fortigate_2_license_file}"
