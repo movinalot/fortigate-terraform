@@ -51,6 +51,7 @@ locals {
     }
   }
 
+  availability_set = false # set to true to availability sets
   availability_sets = {
     "avail-1" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
@@ -580,9 +581,9 @@ locals {
 
       identity_identity = "SystemAssigned"
 
-      #availability_set_id or zones can be set but not both, both can be null
-      availability_set_id = azurerm_availability_set.availability_set["avail-1"].id
-      zones               = null
+      # availability_set_id or zones can be set but not both, both can be null
+      availability_set_id = local.availability_set ? azurerm_availability_set.availability_set["avail-1"].id : null
+      zones               = local.availability_set ? null : ["1"]
 
       storage_image_reference_publisher = local.vm_image["fortigate"].publisher
       storage_image_reference_offer     = local.vm_image["fortigate"].offer
@@ -659,9 +660,9 @@ locals {
 
       identity_identity = "SystemAssigned"
 
-      #availability_set_id or zones can be set but not both, both can be null
-      availability_set_id = azurerm_availability_set.availability_set["avail-1"].id
-      zones               = null
+      # availability_set_id or zones can be set but not both, both can be null
+      availability_set_id = local.availability_set ? azurerm_availability_set.availability_set["avail-1"].id : null
+      zones               = local.availability_set ? null : ["2"]
 
       storage_image_reference_publisher = local.vm_image["fortigate"].publisher
       storage_image_reference_offer     = local.vm_image["fortigate"].offer

@@ -21,15 +21,15 @@ locals {
   forti_manager_ip     = ""
   forti_manager_serial = ""
 
-  license_type = "payg"   # can be byol, flex, or payg, make sure the license is correct for the sku
+  license_type = "payg" # can be byol, flex, or payg, make sure the license is correct for the sku
 
   vm_image = {
     "fortigate" = {
-      publisher    = "fortinet"
-      offer        = "fortinet_fortigate-vm_v5"
-      sku          = local.license_type == "payg" ? "fortinet_fg-vm_payg_2022" : "fortinet_fg-vm" # byol and flex use: fortinet_fg-vm | payg use: fortinet_fg-vm_payg_2022
-      vm_size      = "Standard_D8s_v4"
-      version      = "7.2.5" # an be a verrsion number as well, e.g. 6.4.9, 7.0.6, 7.2.5, 7.4.0
+      publisher = "fortinet"
+      offer     = "fortinet_fortigate-vm_v5"
+      sku       = local.license_type == "payg" ? "fortinet_fg-vm_payg_2022" : "fortinet_fg-vm" # byol and flex use: fortinet_fg-vm | payg use: fortinet_fg-vm_payg_2022
+      vm_size   = "Standard_D8s_v4"
+      version   = "7.2.5" # an be a verrsion number as well, e.g. 6.4.9, 7.0.6, 7.2.5, 7.4.0
     }
   }
 
@@ -67,6 +67,7 @@ locals {
     }
   }
 
+  availability_set = false # set to true to availability sets
   availability_sets = {
     "avail-1" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
@@ -412,9 +413,9 @@ locals {
 
       identity_identity = "SystemAssigned"
 
-      #availability_set_id or zones can be set but not both, both can be null
-      availability_set_id = azurerm_availability_set.availability_set["avail-1"].id
-      zones               = null
+      # availability_set_id or zones can be set but not both, both can be null
+      availability_set_id = local.availability_set ? azurerm_availability_set.availability_set["avail-1"].id : null
+      zones               = local.availability_set ? null : ["1"]
 
       public_ip_address = azurerm_public_ip.public_ip["pip-fgt_1_mgmt"].ip_address
 
@@ -501,9 +502,9 @@ locals {
 
       identity_identity = "SystemAssigned"
 
-      #availability_set_id or zones can be set but not both, both can be null
-      availability_set_id = azurerm_availability_set.availability_set["avail-1"].id
-      zones               = null
+      # availability_set_id or zones can be set but not both, both can be null
+      availability_set_id = local.availability_set ? azurerm_availability_set.availability_set["avail-1"].id : null
+      zones               = local.availability_set ? null : ["2"]
 
       public_ip_address = azurerm_public_ip.public_ip["pip-fgt_2_mgmt"].ip_address
 

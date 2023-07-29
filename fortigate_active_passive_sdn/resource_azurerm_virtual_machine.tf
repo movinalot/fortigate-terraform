@@ -7,6 +7,9 @@ resource "azurerm_virtual_machine" "virtual_machine" {
   name    = each.value.name
   vm_size = each.value.vm_size
 
+  availability_set_id = each.value.availability_set_id
+  zones               = each.value.zones
+
   network_interface_ids        = each.value.network_interface_ids
   primary_network_interface_id = each.value.primary_network_interface_id
 

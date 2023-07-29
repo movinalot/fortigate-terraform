@@ -11,8 +11,7 @@ locals {
   # FortiGate Licese files are expected to be
   # in the same folder as this file, when using byol
 
-  fortigate_1_license_file = ""
-
+  fortigate_1_license_file  = ""
   fortigate_1_license_token = ""
 
   connect_to_fmg       = ""
