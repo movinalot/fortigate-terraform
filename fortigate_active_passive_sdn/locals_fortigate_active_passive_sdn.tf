@@ -417,8 +417,6 @@ locals {
       availability_set_id = local.availability_set ? azurerm_availability_set.availability_set["avail-1"].id : null
       zones               = local.availability_set ? null : ["1"]
 
-      public_ip_address = azurerm_public_ip.public_ip["pip-fgt_1_mgmt"].ip_address
-
       storage_image_reference_publisher = local.vm_image["fortigate"].publisher
       storage_image_reference_offer     = local.vm_image["fortigate"].offer
       storage_image_reference_sku       = local.vm_image["fortigate"].sku
@@ -453,7 +451,6 @@ locals {
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
           license_file            = "${path.module}/${local.fortigate_1_license_file}"
-          serial_number           = ""
           license_token           = local.fortigate_1_license_token
           api_key                 = random_string.string.id
           vnet_address_prefix     = azurerm_virtual_network.virtual_network["vnet-security"].address_space[0]
@@ -506,8 +503,6 @@ locals {
       availability_set_id = local.availability_set ? azurerm_availability_set.availability_set["avail-1"].id : null
       zones               = local.availability_set ? null : ["2"]
 
-      public_ip_address = azurerm_public_ip.public_ip["pip-fgt_2_mgmt"].ip_address
-
       storage_image_reference_publisher = local.vm_image["fortigate"].publisher
       storage_image_reference_offer     = local.vm_image["fortigate"].offer
       storage_image_reference_sku       = local.vm_image["fortigate"].sku
@@ -542,7 +537,6 @@ locals {
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
           license_file            = "${path.module}/${local.fortigate_2_license_file}"
-          serial_number           = ""
           license_token           = local.fortigate_2_license_token
           api_key                 = random_string.string.id
           vnet_address_prefix     = azurerm_virtual_network.virtual_network["vnet-security"].address_space[0]

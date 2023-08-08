@@ -302,7 +302,6 @@ locals {
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
           license_file            = "${path.module}/${local.fortigate_1_license_file}"
-          serial_number           = ""
           license_token           = local.fortigate_1_license_token
           api_key                 = random_string.string.id
           vnet_address_prefix     = azurerm_virtual_network.virtual_network["vnet-security"].address_space[0]
@@ -312,14 +311,6 @@ locals {
           port1_netmask           = cidrnetmask(azurerm_subnet.subnet["snet-external"].address_prefixes[0])
           port2_ip                = azurerm_network_interface.network_interface["nic-fortigate_1_2"].private_ip_address
           port2_netmask           = cidrnetmask(azurerm_subnet.subnet["snet-internal"].address_prefixes[0])
-          sdn_resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
-          sdn_nic_name            = azurerm_network_interface.network_interface["nic-fortigate_1_1"].name
-          sdn_nic_config_name     = "ipconfig1"
-          sdn_public_ip_name      = azurerm_public_ip.public_ip["pip-fgt"].name
-          sdn_route_table_name    = azurerm_route_table.route_table["rt-protected"].name
-          sdn_route_name          = azurerm_route.route["udr-default"].name
-          snd_next_hop_ip         = azurerm_network_interface.network_interface["nic-fortigate_1_2"].private_ip_address
-          sdn_subscription_id     = data.azurerm_subscription.subscription.subscription_id
         }
       )
 

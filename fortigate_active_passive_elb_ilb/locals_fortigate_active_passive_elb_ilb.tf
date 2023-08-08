@@ -619,7 +619,6 @@ locals {
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
           license_file            = "${path.module}/${local.fortigate_1_license_file}"
-          serial_number           = ""
           license_token           = local.fortigate_1_license_token
           api_key                 = random_string.string.id
           vnet_address_prefix     = azurerm_virtual_network.virtual_network["vnet-security"].address_space[0]
@@ -698,7 +697,6 @@ locals {
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
           license_file            = "${path.module}/${local.fortigate_2_license_file}"
-          serial_number           = ""
           license_token           = local.fortigate_2_license_token
           api_key                 = random_string.string.id
           vnet_address_prefix     = azurerm_virtual_network.virtual_network["vnet-security"].address_space[0]
