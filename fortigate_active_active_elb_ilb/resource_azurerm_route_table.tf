@@ -1,7 +1,5 @@
-module "module_azurerm_route_table" {
+resource "azurerm_route_table" "route_table" {
   for_each = local.route_tables
-
-  source = "../azure/rm/azurerm_route_table"
 
   resource_group_name = each.value.resource_group_name
   location            = each.value.location
@@ -10,5 +8,5 @@ module "module_azurerm_route_table" {
 }
 
 output "route_tables" {
-  value = var.enable_module_output ? module.module_azurerm_route_table[*] : null
+  value = var.enable_output ? azurerm_route_table.route_table[*] : null
 }
