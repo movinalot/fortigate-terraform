@@ -1,4 +1,4 @@
-resource "local_sensitive_file" "tempalte_file" {
+resource "local_file" "file" {
   for_each = local.virtual_machines
 
   filename = format("fortios_%s.cfg", each.value.name)
