@@ -1,14 +1,14 @@
 locals {
 
   username = "azureuser"
-  password = "Password123!!"
+  password = "123Password$%^"
 
   resource_group_name     = "rg-fortigate_ap_sdn"
   resource_group_location = "eastus2"
 
   virtual_network_name = "vnet-security"
 
-  # FortiGate Licese files are expected to be
+  # FortiGate License files are expected to be
   # in the same folder as this file, when using byol
 
   fortigate_1_license_file = ""
@@ -27,9 +27,9 @@ locals {
     "fortigate" = {
       publisher = "fortinet"
       offer     = "fortinet_fortigate-vm_v5"
-      sku       = local.license_type == "payg" ? "fortinet_fg-vm_payg_2022" : "fortinet_fg-vm" # byol and flex use: fortinet_fg-vm | payg use: fortinet_fg-vm_payg_2022
-      vm_size   = "Standard_D8s_v4"
-      version   = "7.2.5" # an be a verrsion number as well, e.g. 6.4.9, 7.0.6, 7.2.5, 7.4.0
+      sku       = local.license_type == "payg" ? "fortinet_fg-vm_payg_2023" : "fortinet_fg-vm" # byol and flex use: fortinet_fg-vm | payg use: fortinet_fg-vm_payg_2023
+      vm_size   = "Standard_D8s_v5"
+      version   = "7.4.7" # an be a version number as well, e.g. 6.4.9, 7.0.6, 7.2.5, 7.4.0
     }
   }
 
@@ -97,35 +97,35 @@ locals {
 
       name                 = "snet-external"
       virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
-      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 0)]
+      address_prefixes     = [cidrsubnet(tolist(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space)[0], 4, 0)]
     }
     "snet-internal" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                 = "snet-internal"
       virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
-      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 1)]
+      address_prefixes     = [cidrsubnet(tolist(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space)[0], 4, 1)]
     }
     "snet-hasync" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                 = "snet-hasync"
       virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
-      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 2)]
+      address_prefixes     = [cidrsubnet(tolist(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space)[0], 4, 2)]
     }
     "snet-mgmt" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                 = "snet-mgmt"
       virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
-      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 3)]
+      address_prefixes     = [cidrsubnet(tolist(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space)[0], 4, 3)]
     }
     "snet-protected" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                 = "snet-protected"
       virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
-      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 2, 1)]
+      address_prefixes     = [cidrsubnet(tolist(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space)[0], 2, 1)]
     }
   }
 
@@ -134,9 +134,9 @@ locals {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_1_1"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                           = "nic-fortigate_1_1"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -152,9 +152,9 @@ locals {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_1_2"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                           = "nic-fortigate_1_2"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -170,9 +170,9 @@ locals {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_1_3"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                           = "nic-fortigate_1_3"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -188,9 +188,9 @@ locals {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_1_4"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                           = "nic-fortigate_1_4"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -206,9 +206,9 @@ locals {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_2_1"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                           = "nic-fortigate_2_1"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -224,9 +224,9 @@ locals {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_2_2"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                           = "nic-fortigate_2_2"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -242,9 +242,9 @@ locals {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_2_3"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                           = "nic-fortigate_2_3"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -260,9 +260,9 @@ locals {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_2_4"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                           = "nic-fortigate_2_4"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -275,6 +275,8 @@ locals {
       ]
     }
   }
+
+  floating_private_ip_address = cidrhost(azurerm_subnet.subnet["snet-internal"].address_prefixes[0], 6)
 
   route_tables = {
     "rt-protected" = {
@@ -291,7 +293,7 @@ locals {
 
       name                   = "rt-default"
       address_prefix         = "0.0.0.0/0"
-      next_hop_in_ip_address = azurerm_network_interface.network_interface["nic-fortigate_1_2"].private_ip_address
+      next_hop_in_ip_address = local.floating_private_ip_address
       next_hop_type          = "VirtualAppliance"
       route_table_name       = azurerm_route_table.route_table["rt-protected"].name
     }
@@ -453,7 +455,7 @@ locals {
           license_file            = "${path.module}/${local.fortigate_1_license_file}"
           license_token           = local.fortigate_1_license_token
           api_key                 = random_string.string.id
-          vnet_address_prefix     = azurerm_virtual_network.virtual_network["vnet-security"].address_space[0]
+          vnet_address_prefix     = tolist(azurerm_virtual_network.virtual_network["vnet-security"].address_space)[0]
           external_subnet_gateway = cidrhost(azurerm_subnet.subnet["snet-external"].address_prefixes[0], 1)
           internal_subnet_gateway = cidrhost(azurerm_subnet.subnet["snet-internal"].address_prefixes[0], 1)
           port1_ip                = azurerm_network_interface.network_interface["nic-fortigate_1_1"].private_ip_address
@@ -465,15 +467,17 @@ locals {
           port4_ip                = azurerm_network_interface.network_interface["nic-fortigate_1_4"].private_ip_address
           port4_netmask           = cidrnetmask(azurerm_subnet.subnet["snet-mgmt"].address_prefixes[0])
           mgmt_subnet_gateway     = cidrhost(azurerm_subnet.subnet["snet-mgmt"].address_prefixes[0], 1)
-          ha_priority             = 255
+          ha_password             = local.password
           ha_peer                 = azurerm_network_interface.network_interface["nic-fortigate_2_3"].private_ip_address
+          ha_priority             = 255
           sdn_resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
-          sdn_nic_name            = azurerm_network_interface.network_interface["nic-fortigate_1_1"].name
-          sdn_nic_config_name     = "ipconfig1"
+          sdn_nic1_name           = azurerm_network_interface.network_interface["nic-fortigate_1_1"].name
+          sdn_nic1_config_name    = "ipconfig1"
+          sdn_nic2_name           = azurerm_network_interface.network_interface["nic-fortigate_1_2"].name
+          sdn_peer_nic2_name      = azurerm_network_interface.network_interface["nic-fortigate_2_2"].name
+          sdn_floating_ip_config  = "ipconfig2"
+          sdn_floating_ip         = local.floating_private_ip_address
           sdn_public_ip_name      = azurerm_public_ip.public_ip["pip-fgt"].name
-          sdn_route_table_name    = azurerm_route_table.route_table["rt-protected"].name
-          sdn_route_name          = azurerm_route.route["udr-default"].name
-          snd_next_hop_ip         = azurerm_network_interface.network_interface["nic-fortigate_1_2"].private_ip_address
           sdn_subscription_id     = data.azurerm_subscription.subscription.subscription_id
         }
       )
@@ -539,7 +543,7 @@ locals {
           license_file            = "${path.module}/${local.fortigate_2_license_file}"
           license_token           = local.fortigate_2_license_token
           api_key                 = random_string.string.id
-          vnet_address_prefix     = azurerm_virtual_network.virtual_network["vnet-security"].address_space[0]
+          vnet_address_prefix     = tolist(azurerm_virtual_network.virtual_network["vnet-security"].address_space)[0]
           external_subnet_gateway = cidrhost(azurerm_subnet.subnet["snet-external"].address_prefixes[0], 1)
           internal_subnet_gateway = cidrhost(azurerm_subnet.subnet["snet-internal"].address_prefixes[0], 1)
           port1_ip                = azurerm_network_interface.network_interface["nic-fortigate_2_1"].private_ip_address
@@ -551,15 +555,17 @@ locals {
           port4_ip                = azurerm_network_interface.network_interface["nic-fortigate_2_4"].private_ip_address
           port4_netmask           = cidrnetmask(azurerm_subnet.subnet["snet-mgmt"].address_prefixes[0])
           mgmt_subnet_gateway     = cidrhost(azurerm_subnet.subnet["snet-mgmt"].address_prefixes[0], 1)
-          ha_priority             = 1
+          ha_password             = local.password
           ha_peer                 = azurerm_network_interface.network_interface["nic-fortigate_1_3"].private_ip_address
+          ha_priority             = 1
           sdn_resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
-          sdn_nic_name            = azurerm_network_interface.network_interface["nic-fortigate_2_1"].name
-          sdn_nic_config_name     = "ipconfig1"
+          sdn_nic1_name           = azurerm_network_interface.network_interface["nic-fortigate_2_1"].name
+          sdn_nic1_config_name    = "ipconfig1"
+          sdn_nic2_name           = azurerm_network_interface.network_interface["nic-fortigate_1_2"].name
+          sdn_peer_nic2_name      = azurerm_network_interface.network_interface["nic-fortigate_2_2"].name
+          sdn_floating_ip_config  = "ipconfig2"
+          sdn_floating_ip         = local.floating_private_ip_address
           sdn_public_ip_name      = azurerm_public_ip.public_ip["pip-fgt"].name
-          sdn_route_table_name    = azurerm_route_table.route_table["rt-protected"].name
-          sdn_route_name          = azurerm_route.route["udr-default"].name
-          snd_next_hop_ip         = azurerm_network_interface.network_interface["nic-fortigate_2_2"].private_ip_address
           sdn_subscription_id     = data.azurerm_subscription.subscription.subscription_id
         }
       )
