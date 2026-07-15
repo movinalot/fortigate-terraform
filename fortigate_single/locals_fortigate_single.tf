@@ -1,37 +1,36 @@
 locals {
 
-  username = "azureuser"
-  password = "Password123!!"
+  username = var.username
+  password = var.password
 
   resource_group_name     = "rg-fortigate_single"
-  resource_group_location = "eastus2"
+  resource_group_location = "eastus"
 
   virtual_network_name = "vnet-security"
 
-  # FortiGate Licese files are expected to be
-  # in the same folder as this file, when using byol
+  # FortiGate License files are expected to be in
+  # the same folder as this file when using byol
 
-  fortigate_1_license_file  = ""
-  fortigate_1_license_token = ""
+  fortigate_license_file  = ""
+  fortigate_license_token = ""
 
   connect_to_fmg       = ""
   forti_manager_ip     = ""
   forti_manager_serial = ""
 
-  license_type = "payg" # can be byol, flex, or payg, make sure the license is correct for the sku
-
+  # Refer to the README.md for details on the correct image reference for byol/flex or payg images.
   vm_image = {
     "fortigate" = {
       publisher = "fortinet"
-      offer     = "fortinet_fortigate-vm_v5"
-      sku       = local.license_type == "payg" ? "fortinet_fg-vm_payg_2022" : "fortinet_fg-vm" # byol and flex use: fortinet_fg-vm | payg use: fortinet_fg-vm_payg_2022
-      vm_size   = "Standard_D8s_v4"
-      version   = "7.2.5" # an be a verrsion number as well, e.g. 6.4.9, 7.0.6, 7.2.5, 7.4.0
+      offer     = "fortinet_fortigate-vm"
+      sku       = "fortinet_fg-vm_payg_80_g2"
+      vm_size   = "Standard_F2als_v7"
+      version   = "latest" # can be a version number, refer to README.md
     }
   }
 
   resource_groups = {
-    (local.resource_group_name) = {
+    "rg-fortigate_single" = {
       name     = local.resource_group_name
       location = local.resource_group_location
     }
@@ -48,7 +47,7 @@ locals {
     }
   }
 
-  availability_set = true # set to true to availability sets
+  availability_set = false # set to true to availability sets
   availability_sets = {
     "avail-1" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
@@ -78,32 +77,32 @@ locals {
 
       name                 = "snet-external"
       virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
-      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 0)]
+      address_prefixes     = [cidrsubnet(tolist(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space)[0], 4, 0)]
     }
     "snet-internal" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                 = "snet-internal"
       virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
-      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 4, 1)]
+      address_prefixes     = [cidrsubnet(tolist(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space)[0], 4, 1)]
     }
     "snet-protected" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
       name                 = "snet-protected"
       virtual_network_name = azurerm_virtual_network.virtual_network[local.virtual_network_name].name
-      address_prefixes     = [cidrsubnet(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space[0], 2, 1)]
+      address_prefixes     = [cidrsubnet(tolist(azurerm_virtual_network.virtual_network[local.virtual_network_name].address_space)[0], 2, 1)]
     }
   }
 
   network_interfaces = {
-    "nic-fortigate_1_1" = {
+    "nic-fortigate_ext" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_1_1"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                           = "nic-fortigate_ext"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -115,13 +114,13 @@ locals {
         }
       ]
     }
-    "nic-fortigate_1_2" = {
+    "nic-fortigate_int" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_1_2"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
+      name                          = "nic-fortigate_int"
+      ip_forwarding_enabled          = true
+      accelerated_networking_enabled = true
       ip_configurations = [
         {
           name                          = "ipconfig1"
@@ -148,9 +147,9 @@ locals {
     "udr-default" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name                   = "rt-default"
+      name                   = "udr-default"
       address_prefix         = "0.0.0.0/0"
-      next_hop_in_ip_address = azurerm_network_interface.network_interface["nic-fortigate_1_2"].private_ip_address
+      next_hop_in_ip_address = azurerm_network_interface.network_interface["nic-fortigate_int"].private_ip_address
       next_hop_type          = "VirtualAppliance"
       route_table_name       = azurerm_route_table.route_table["rt-protected"].name
     }
@@ -248,84 +247,84 @@ locals {
     }
   }
 
-  virtual_machines = {
-    "vm_fgt_1" = {
+  linux_virtual_machines = {
+    "vm-fgt" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name    = "vm-fgt-1"
-      vm_size = local.vm_image["fortigate"].vm_size
+      name                  = "vm-fgt"
+      network_interface_ids = [for nic in ["nic-fortigate_ext", "nic-fortigate_int"] : azurerm_network_interface.network_interface[nic].id]
 
-      network_interface_ids        = [for nic in ["nic-fortigate_1_1", "nic-fortigate_1_2"] : azurerm_network_interface.network_interface[nic].id]
-      primary_network_interface_id = azurerm_network_interface.network_interface["nic-fortigate_1_1"].id
+      size = local.vm_image["fortigate"].vm_size
 
-      delete_os_disk_on_termination    = true
-      delete_data_disks_on_termination = true
+      username = var.username
+      password = var.password
 
-      identity_identity = "SystemAssigned"
+      disable_password_authentication = false
 
-      #availability_set_id or zones can be set but not both, both can be null
-      availability_set_id = local.availability_set ? azurerm_availability_set.availability_set["avail-1"].id : null
-      zones               = local.availability_set ? null : ["1"]
+      source_image_reference_publisher = local.vm_image["fortigate"].publisher
+      source_image_reference_offer     = local.vm_image["fortigate"].offer
+      source_image_reference_sku       = local.vm_image["fortigate"].sku
+      source_image_reference_version   = local.vm_image["fortigate"].version
 
-      storage_image_reference_publisher = local.vm_image["fortigate"].publisher
-      storage_image_reference_offer     = local.vm_image["fortigate"].offer
-      storage_image_reference_sku       = local.vm_image["fortigate"].sku
-      storage_image_reference_version   = local.vm_image["fortigate"].version
+      plan = [{
+        publisher = local.vm_image["fortigate"].publisher
+        product   = local.vm_image["fortigate"].offer
+        name      = local.vm_image["fortigate"].sku
+      }]
 
-      plan_publisher = local.vm_image["fortigate"].publisher
-      plan_product   = local.vm_image["fortigate"].offer
-      plan_name      = local.vm_image["fortigate"].sku
+      os_disk_name                 = "osdisk-fgt"
+      os_disk_caching              = "ReadWrite"
+      os_disk_storage_account_type = "Premium_LRS"
 
-      storage_os_disk_name              = "osdisk-fgt_1"
-      storage_os_disk_caching           = "ReadWrite"
-      storage_os_disk_managed_disk_type = "Premium_LRS"
-      storage_os_disk_create_option     = "FromImage"
-
-      storage_data_disks = [
-        {
-          name              = "disk-fgt_1"
-          managed_disk_type = "Premium_LRS"
-          create_option     = "Empty"
-          disk_size_gb      = "30"
-          lun               = "0"
-        }
-      ]
-
-      os_profile_admin_username = local.username
-      os_profile_admin_password = local.password
-      os_profile_custom_data = templatefile(
+      custom_data = templatefile(
         "./fortios_config.conf", {
-          host_name               = "vm-fgt-1"
+          host_name               = "vm-fgt"
           connect_to_fmg          = local.connect_to_fmg
-          license_type            = local.license_type
+          license_type            = substr(local.vm_image["fortigate"].sku, 15, 4)
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
-          license_file            = "${path.module}/${local.fortigate_1_license_file}"
-          license_token           = local.fortigate_1_license_token
+          license_file            = local.fortigate_license_file
+          license_token           = local.fortigate_license_token
           api_key                 = random_string.string.id
-          vnet_address_prefix     = azurerm_virtual_network.virtual_network["vnet-security"].address_space[0]
+          vnet_address_prefix     = tolist(azurerm_virtual_network.virtual_network["vnet-security"].address_space)[0]
           external_subnet_gateway = cidrhost(azurerm_subnet.subnet["snet-external"].address_prefixes[0], 1)
           internal_subnet_gateway = cidrhost(azurerm_subnet.subnet["snet-internal"].address_prefixes[0], 1)
-          port1_ip                = azurerm_network_interface.network_interface["nic-fortigate_1_1"].private_ip_address
+          port1_ip                = azurerm_network_interface.network_interface["nic-fortigate_ext"].private_ip_address
           port1_netmask           = cidrnetmask(azurerm_subnet.subnet["snet-external"].address_prefixes[0])
-          port2_ip                = azurerm_network_interface.network_interface["nic-fortigate_1_2"].private_ip_address
+          port2_ip                = azurerm_network_interface.network_interface["nic-fortigate_int"].private_ip_address
           port2_netmask           = cidrnetmask(azurerm_subnet.subnet["snet-internal"].address_prefixes[0])
         }
       )
+    }
+  }
 
-      os_profile_linux_config_disable_password_authentication = false
+  managed_disks = {
+    "disk-fgt" = {
+      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
+      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      boot_diagnostics_enabled     = true
-      boot_diagnostics_storage_uri = ""
+      name                 = "data_disk-fgt"
+      storage_account_type = "Premium_LRS"
+      create_option        = "Empty"
+      disk_size_gb         = 30
+    }
+  }
+
+  virtual_machine_data_disk_attachments = {
+    "disk-fgt-attach" = {
+      managed_disk_id    = azurerm_managed_disk.managed_disk["disk-fgt"].id
+      virtual_machine_id = azurerm_linux_virtual_machine.linux_virtual_machine["vm-fgt"].id
+      lun                = 0
+      caching            = "ReadWrite"
     }
   }
 
   role_assignments = {
-    "vm_fgt_1" = {
+    "vm-fgt" = {
       scope                = azurerm_resource_group.resource_group[local.resource_group_name].id
       role_definition_name = "Contributor"
-      principal_id         = azurerm_virtual_machine.virtual_machine["vm_fgt_1"].identity[0].principal_id
+      principal_id         = azurerm_linux_virtual_machine.linux_virtual_machine["vm-fgt"].identity[0].principal_id
     }
   }
 }
