@@ -118,7 +118,7 @@ locals {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name                          = "nic-fortigate_int"
+      name                           = "nic-fortigate_int"
       ip_forwarding_enabled          = true
       accelerated_networking_enabled = true
       ip_configurations = [

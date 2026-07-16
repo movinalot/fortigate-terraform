@@ -9,3 +9,7 @@ resource "azurerm_managed_disk" "managed_disk" {
   create_option        = each.value.create_option
   disk_size_gb         = each.value.disk_size_gb
 }
+
+output "managed_disks" {
+  value = var.enable_output ? azurerm_managed_disk.managed_disk[*] : null
+}
