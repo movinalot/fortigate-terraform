@@ -39,11 +39,11 @@ resource "azurerm_linux_virtual_machine" "linux_virtual_machine" {
   custom_data = base64encode(each.value.custom_data)
 
   identity {
-    type = "SystemAssigned"
+    type = each.value.identity_type
   }
 
   boot_diagnostics {
-    storage_account_uri = ""
+    storage_account_uri = each.value.boot_diagnostics_storage_account_uri
   }
 }
 

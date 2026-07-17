@@ -14,7 +14,7 @@ locals {
   fortigate_license_file  = ""
   fortigate_license_token = ""
 
-  connect_to_fmg       = ""
+  connect_to_fmg       = "" # set to "true" to connect to FortiManager
   forti_manager_ip     = ""
   forti_manager_serial = ""
 
@@ -277,6 +277,9 @@ locals {
       os_disk_caching              = "ReadWrite"
       os_disk_storage_account_type = "Premium_LRS"
 
+      identity_type = "SystemAssigned"
+      boot_diagnostics_storage_account_uri = ""
+
       custom_data = templatefile(
         "./fortios_config.conf", {
           host_name               = "vm-fgt"
@@ -300,7 +303,7 @@ locals {
   }
 
   managed_disks = {
-    "disk-fgt" = {
+    "data_disk-fgt" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
@@ -312,8 +315,8 @@ locals {
   }
 
   virtual_machine_data_disk_attachments = {
-    "disk-fgt-attach" = {
-      managed_disk_id    = azurerm_managed_disk.managed_disk["disk-fgt"].id
+    "data_disk-fgt" = {
+      managed_disk_id    = azurerm_managed_disk.managed_disk["data_disk-fgt"].id
       virtual_machine_id = azurerm_linux_virtual_machine.linux_virtual_machine["vm-fgt"].id
       lun                = 0
       caching            = "ReadWrite"
