@@ -100,10 +100,10 @@ If using a Service Principal with Terraform, accept the Azure Marketplace Terms 
 
 - Terraform resource
 
-```terraform
-  resource "azurerm_marketplace_agreement" "marketplace_agreement_fortinet" {
-  publisher = "fortinet"
-  offer     = "fortinet_fortigate-vm"
-  plan      = "fortinet_fg-vm_payg_80"
-}
-```
+  ```terraform
+    resource "azurerm_marketplace_agreement" "marketplace_agreement_fortinet" {
+    publisher = "fortinet"
+    offer     = "fortinet_fortigate-vm"
+    plan      = "fortinet_fg-vm_payg_80"
+  }
+  ```
