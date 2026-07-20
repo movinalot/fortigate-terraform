@@ -15,7 +15,6 @@ locals {
   fortigate_license_token = var.fortigate_license_token
   fortigate_license_type  = "flex" # can be "byol", "flex", or "payg"
 
-  connect_to_fmg       = "" # set to "true" to connect to FortiManager
   forti_manager_ip     = ""
   forti_manager_serial = ""
 
@@ -285,7 +284,7 @@ locals {
       custom_data = templatefile(
         "${path.module}/fortios_config.conf", {
           host_name               = "vm-fgt"
-          connect_to_fmg          = local.forti_manager_ip != "" && local.forti_manager_serial != "" ? local.connect_to_fmg : "true"
+          connect_to_fmg          = local.forti_manager_ip == "" && local.forti_manager_serial == "" ? "" : "true"
           license_type            = local.fortigate_license_type
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
