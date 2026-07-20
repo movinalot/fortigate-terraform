@@ -6,6 +6,6 @@ resource "local_file" "file" {
 }
 
 output "local_files" {
-  value = var.enable_output ? local_file.file[*] : null
+  value     = var.enable_output ? local_file.file[*] : null
   sensitive = true
 }

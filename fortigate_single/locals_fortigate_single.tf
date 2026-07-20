@@ -3,7 +3,7 @@ locals {
   username = var.username
   password = var.password
 
-  resource_group_name     = "rg-fortigate_single"
+  resource_group_name     = var.resource_group_name
   resource_group_location = "eastus"
 
   virtual_network_name = "vnet-security"
@@ -11,8 +11,9 @@ locals {
   # FortiGate License files are expected to be in
   # the same folder as this file when using byol
 
-  fortigate_license_file  = ""
-  fortigate_license_token = ""
+  fortigate_license_file  = var.fortigate_license_file
+  fortigate_license_token = var.fortigate_license_token
+  fortigate_license_type  = "flex" # can be "byol", "flex", or "payg"
 
   connect_to_fmg       = "" # set to "true" to connect to FortiManager
   forti_manager_ip     = ""
@@ -23,14 +24,15 @@ locals {
     "fortigate" = {
       publisher = "fortinet"
       offer     = "fortinet_fortigate-vm"
-      sku       = "fortinet_fg-vm_payg_80_g2"
-      vm_size   = "Standard_F2als_v7"
-      version   = "latest" # can be a version number, refer to README.md
+      sku       = "fortinet_fg-vm_byol_80_g2"
+
+      vm_size = "Standard_F2als_v7"
+      version = "latest" # can be a version number, refer to README.md
     }
   }
 
   resource_groups = {
-    "rg-fortigate_single" = {
+    "${local.resource_group_name}" = {
       name     = local.resource_group_name
       location = local.resource_group_location
     }
@@ -277,14 +279,14 @@ locals {
       os_disk_caching              = "ReadWrite"
       os_disk_storage_account_type = "Premium_LRS"
 
-      identity_type = "SystemAssigned"
+      identity_type                        = "SystemAssigned"
       boot_diagnostics_storage_account_uri = ""
 
       custom_data = templatefile(
-        "./fortios_config.conf", {
+        "${path.module}/fortios_config.conf", {
           host_name               = "vm-fgt"
-          connect_to_fmg          = local.connect_to_fmg
-          license_type            = substr(local.vm_image["fortigate"].sku, 15, 4)
+          connect_to_fmg          = local.forti_manager_ip != "" && local.forti_manager_serial != "" ? local.connect_to_fmg : "true"
+          license_type            = local.fortigate_license_type
           forti_manager_ip        = local.forti_manager_ip
           forti_manager_serial    = local.forti_manager_serial
           license_file            = local.fortigate_license_file

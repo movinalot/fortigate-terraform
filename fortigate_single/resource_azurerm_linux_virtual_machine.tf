@@ -48,6 +48,6 @@ resource "azurerm_linux_virtual_machine" "linux_virtual_machine" {
 }
 
 output "linux_virtual_machines" {
-  value = var.enable_output ? azurerm_linux_virtual_machine.linux_virtual_machine[*] : null
+  value     = var.enable_output ? azurerm_linux_virtual_machine.linux_virtual_machine[*] : null
   sensitive = true
 }
