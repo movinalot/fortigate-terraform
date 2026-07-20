@@ -76,12 +76,27 @@ As of 2026-07-01, the latest available SKUs are:
 
 ## Azure Marketplace Terms
 
-The Azure Marketplace Terms for the FortiGate-VM PAYG or BYOL/FLEX image in the Azure Marketplace need to be accepted once before usage. This is done automatically during deployment via the Azure Portal. When using Terraform the Azure CLI commands below can be used to accept the agreement or the Terraform resource be run before the first deployment in a subscription.
+The Azure Marketplace Terms for the FortiGate-VM PAYG or BYOL/FLEX image in the Azure Marketplace need to be accepted once before usage. This is done automatically during deployment via the Azure Portal. When using Terraform the Azure CLI commands below can be used to accept the agreement or use the Terraform resource before the first deployment of a FortiGate-VM in a subscription.
+
+If using a Service Principal with Terraform, accept the Azure Marketplace Terms using the Service Principal
+
+- az login using a service principal
+
+  ```sh
+  az login --service-principal --username <client_id> --password <client_secret> --tenant <tenant_id> --subscription <subscription_id>
+  ```
 
 - BYOL/FLEX
-  - az vm image terms accept --publisher fortinet --offer fortinet_fortigate-vm --plan fortinet_fg-vm-byol_80
+
+  ```sh
+  az vm image terms accept --publisher fortinet --offer fortinet_fortigate-vm --plan fortinet_fg-vm-byol_80
+  ```
+
 - PAYG
-  - az vm image terms accept --publisher fortinet --offer fortinet_fortigate-vm --plan fortinet_fg-vm_payg_80
+
+  ```sh
+  az vm image terms accept --publisher fortinet --offer fortinet_fortigate-vm --plan fortinet_fg-vm_payg_80
+  ```
 
 - Terraform resource
 
