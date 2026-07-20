@@ -1,5 +1,5 @@
 resource "azurerm_availability_set" "availability_set" {
-  for_each = local.availability_sets
+  for_each = local.availability_set == true ? local.availability_sets : {}
 
   resource_group_name = each.value.resource_group_name
   location            = each.value.location

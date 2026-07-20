@@ -20,6 +20,12 @@ resource "azurerm_network_interface" "network_interface" {
       public_ip_address_id          = ip_configuration.value.public_ip_address_id
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      ip_configuration["ipconfig2"]
+    ]
+  }
 }
 
 output "network_interfaces" {
