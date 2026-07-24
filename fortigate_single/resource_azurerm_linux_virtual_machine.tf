@@ -12,6 +12,9 @@ resource "azurerm_linux_virtual_machine" "linux_virtual_machine" {
   admin_username = each.value.username
   admin_password = each.value.password
 
+  availability_set_id = each.value.availability_set_id
+  zone                = each.value.zone
+
   disable_password_authentication = each.value.disable_password_authentication
 
   source_image_reference {

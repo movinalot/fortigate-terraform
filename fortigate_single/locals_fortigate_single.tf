@@ -24,9 +24,8 @@ locals {
       publisher = "fortinet"
       offer     = "fortinet_fortigate-vm"
       sku       = "fortinet_fg-vm_byol_80_g2"
-
-      vm_size = "Standard_F2als_v7"
-      version = "latest" # can be a version number, refer to README.md
+      vm_size   = "Standard_F2als_v7"
+      version   = "latest" # can be a version number, refer to README.md
     }
   }
 
@@ -34,6 +33,7 @@ locals {
     "${local.resource_group_name}" = {
       name     = local.resource_group_name
       location = local.resource_group_location
+      tags     = var.tags
     }
   }
 
@@ -45,10 +45,12 @@ locals {
       name              = "pip-fgt"
       allocation_method = "Static"
       sku               = "Standard"
+      zones             = ["1", "2", "3"]
     }
   }
 
-  availability_set = false # set to true to availability sets
+  vm-fgt_availability_zone = ""
+  availability_set         = true # set to true to use availability set
   availability_sets = {
     "avail-1" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
@@ -258,6 +260,9 @@ locals {
 
       size = local.vm_image["fortigate"].vm_size
 
+      availability_set_id = local.availability_set ? azurerm_availability_set.availability_set["avail-1"].id : null
+      zone                = local.availability_set ? null : local.vm-fgt_availability_zone
+
       username = var.username
       password = var.password
 
@@ -312,6 +317,7 @@ locals {
       storage_account_type = "Premium_LRS"
       create_option        = "Empty"
       disk_size_gb         = 30
+      zone                 = local.availability_set ? null : local.vm-fgt_availability_zone
     }
   }
 

@@ -1,0 +1,11 @@
+
+resource_group_name = "rg-fortigate_single"
+tags = {
+  ResourceOwner      = "John Smith"
+  Username           = "jsmith"
+  environment        = "dev"
+}
+username                = "username"
+password                = "password"
+fortigate_license_token = ""
+fortigate_license_file  = ""

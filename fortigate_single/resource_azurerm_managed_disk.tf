@@ -8,6 +8,7 @@ resource "azurerm_managed_disk" "managed_disk" {
   storage_account_type = each.value.storage_account_type
   create_option        = each.value.create_option
   disk_size_gb         = each.value.disk_size_gb
+  zone                 = each.value.zone
 }
 
 output "managed_disks" {
