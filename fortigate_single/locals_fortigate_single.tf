@@ -50,7 +50,7 @@ locals {
   }
 
   vm-fgt_availability_zone = ""
-  availability_set         = true # set to true to use availability set
+  availability_set         = false # set to true to use availability set
   availability_sets = {
     "avail-1" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
@@ -70,7 +70,7 @@ locals {
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
       name          = local.virtual_network_name
-      address_space = ["172.16.136.0/22"]
+      address_space = ["172.16.16.0/22"]
     }
   }
 

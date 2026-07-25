@@ -7,7 +7,7 @@ output "FortiGate_Public_IP" {
 }
 
 
-output "credentials" {
+output "FortiGate_Credentials" {
   value     = format("username: %s / password: %s", local.username, local.password)
   sensitive = true
 }
