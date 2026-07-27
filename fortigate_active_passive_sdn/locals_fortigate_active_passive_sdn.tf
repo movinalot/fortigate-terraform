@@ -16,7 +16,7 @@ locals {
 
   fortigate_1_license_token = var.fortigate_1_license_token
   fortigate_2_license_token = var.fortigate_2_license_token
-  fortigate_license_type    = "payg" # can be "byol", "flex", or "payg"
+  fortigate_license_type    = "flex" # can be "byol", "flex", or "payg"
 
   forti_manager_ip     = ""
   forti_manager_serial = ""
@@ -27,7 +27,7 @@ locals {
     "fortigate" = {
       publisher = "fortinet"
       offer     = "fortinet_fortigate-vm"
-      sku       = "fortinet_fg-vm_payg_80_g2"
+      sku       = "fortinet_fg-vm_byol_80_g2"
       vm_size   = "Standard_F2als_v7"
       version   = "latest" # can be a version number, refer to README.md
     }
@@ -72,7 +72,7 @@ locals {
   }
 
   vm-fgt-1_availability_zone = "1"
-  vm-fgt-2_availability_zone = "2"
+  vm-fgt-2_availability_zone = "3"
 
   availability_set = false # set to true to availability sets
   availability_sets = {
@@ -181,7 +181,7 @@ locals {
           subnet_id                     = azurerm_subnet.subnet["snet-hasync-mgmt"].id
           private_ip_address_allocation = "Static"
           private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-hasync-mgmt"].address_prefixes[0], 4)
-          public_ip_address_id          = null
+          public_ip_address_id          = azurerm_public_ip.public_ip["pip-fgt_1_mgmt"].id
         }
       ]
     }
@@ -236,7 +236,7 @@ locals {
           subnet_id                     = azurerm_subnet.subnet["snet-hasync-mgmt"].id
           private_ip_address_allocation = "Static"
           private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-hasync-mgmt"].address_prefixes[0], 5)
-          public_ip_address_id          = null
+          public_ip_address_id          = azurerm_public_ip.public_ip["pip-fgt_2_mgmt"].id
         }
       ]
     }
@@ -274,25 +274,19 @@ locals {
   }
 
   network_security_groups = {
-    "nsg-external" = {
+    "nsg-security" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name = "nsg-external"
-    }
-    "nsg-internal" = {
-      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
-      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
-
-      name = "nsg-internal"
+      name = "nsg-security"
     }
   }
 
   network_security_rules = {
-    "nsgsr-external_ingress" = {
+    "nsgsr-ingress" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name                        = "nsgsr-external_ingress"
+      name                        = "nsgsr-ingress"
       priority                    = 1001
       direction                   = "Inbound"
       access                      = "Allow"
@@ -301,12 +295,12 @@ locals {
       destination_port_range      = "*"
       source_address_prefix       = "*"
       destination_address_prefix  = "*"
-      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-external"].name
+      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-security"].name
     },
-    "nsgsr-external_egress" = {
+    "nsgsr-egress" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name                        = "nsgsr-external_egress"
+      name                        = "nsgsr-egress"
       priority                    = 1002
       direction                   = "Outbound"
       access                      = "Allow"
@@ -315,50 +309,22 @@ locals {
       destination_port_range      = "*"
       source_address_prefix       = "*"
       destination_address_prefix  = "*"
-      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-external"].name
-    },
-    "nsgsr-internal_ingress" = {
-      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
-
-      name                        = "nsgsr-internal_ingress"
-      priority                    = 1003
-      direction                   = "Inbound"
-      access                      = "Allow"
-      protocol                    = "*"
-      source_port_range           = "*"
-      destination_port_range      = "*"
-      source_address_prefix       = "*"
-      destination_address_prefix  = "*"
-      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-internal"].name
-    },
-    "nsgsr-internal_egress" = {
-      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
-
-      name                        = "nsgsr-internal_egress"
-      priority                    = 1004
-      direction                   = "Outbound"
-      access                      = "Allow"
-      protocol                    = "*"
-      source_port_range           = "*"
-      destination_port_range      = "*"
-      source_address_prefix       = "*"
-      destination_address_prefix  = "*"
-      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-internal"].name
+      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-security"].name
     }
   }
 
   subnet_network_security_group_associations = {
     "snet-external" = {
       subnet_id                 = azurerm_subnet.subnet["snet-external"].id
-      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-external"].id
+      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-security"].id
     }
     "snet-internal" = {
       subnet_id                 = azurerm_subnet.subnet["snet-internal"].id
-      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-internal"].id
+      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-security"].id
     }
     "snet-hasync-mgmt" = {
       subnet_id                 = azurerm_subnet.subnet["snet-hasync-mgmt"].id
-      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-internal"].id
+      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-security"].id
     }
   }
 

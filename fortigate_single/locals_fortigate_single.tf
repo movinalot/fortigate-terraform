@@ -13,7 +13,7 @@ locals {
 
   fortigate_license_file  = var.fortigate_license_file
   fortigate_license_token = var.fortigate_license_token
-  fortigate_license_type  = "flex" # can be "byol", "flex", or "payg"
+  fortigate_license_type  = "payg" # can be "byol", "flex", or "payg"
 
   forti_manager_ip     = ""
   forti_manager_serial = ""
@@ -23,7 +23,7 @@ locals {
     "fortigate" = {
       publisher = "fortinet"
       offer     = "fortinet_fortigate-vm"
-      sku       = "fortinet_fg-vm_byol_80_g2"
+      sku       = "fortinet_fg-vm_payg_80_g2"
       vm_size   = "Standard_F2als_v7"
       version   = "latest" # can be a version number, refer to README.md
     }
@@ -49,7 +49,7 @@ locals {
     }
   }
 
-  vm-fgt_availability_zone = ""
+  vm-fgt_availability_zone = "3"
   availability_set         = false # set to true to use availability set
   availability_sets = {
     "avail-1" = {
@@ -166,25 +166,19 @@ locals {
   }
 
   network_security_groups = {
-    "nsg-external" = {
+    "nsg-security" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
       location            = azurerm_resource_group.resource_group[local.resource_group_name].location
 
-      name = "nsg-external"
-    }
-    "nsg-internal" = {
-      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
-      location            = azurerm_resource_group.resource_group[local.resource_group_name].location
-
-      name = "nsg-internal"
+      name = "nsg-security"
     }
   }
 
   network_security_rules = {
-    "nsgsr-external_ingress" = {
+    "nsgsr-ingress" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name                        = "nsgsr-external_ingress"
+      name                        = "nsgsr-ingress"
       priority                    = 1001
       direction                   = "Inbound"
       access                      = "Allow"
@@ -193,12 +187,12 @@ locals {
       destination_port_range      = "*"
       source_address_prefix       = "*"
       destination_address_prefix  = "*"
-      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-external"].name
+      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-security"].name
     },
-    "nsgsr-external_egress" = {
+    "nsgsr-egress" = {
       resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
 
-      name                        = "nsgsr-external_egress"
+      name                        = "nsgsr-egress"
       priority                    = 1002
       direction                   = "Outbound"
       access                      = "Allow"
@@ -207,46 +201,18 @@ locals {
       destination_port_range      = "*"
       source_address_prefix       = "*"
       destination_address_prefix  = "*"
-      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-external"].name
-    },
-    "nsgsr-internal_ingress" = {
-      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
-
-      name                        = "nsgsr-internal_ingress"
-      priority                    = 1003
-      direction                   = "Inbound"
-      access                      = "Allow"
-      protocol                    = "*"
-      source_port_range           = "*"
-      destination_port_range      = "*"
-      source_address_prefix       = "*"
-      destination_address_prefix  = "*"
-      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-internal"].name
-    },
-    "nsgsr-internal_egress" = {
-      resource_group_name = azurerm_resource_group.resource_group[local.resource_group_name].name
-
-      name                        = "nsgsr-internal_egress"
-      priority                    = 1004
-      direction                   = "Outbound"
-      access                      = "Allow"
-      protocol                    = "*"
-      source_port_range           = "*"
-      destination_port_range      = "*"
-      source_address_prefix       = "*"
-      destination_address_prefix  = "*"
-      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-internal"].name
+      network_security_group_name = azurerm_network_security_group.network_security_group["nsg-security"].name
     }
   }
 
   subnet_network_security_group_associations = {
     "snet-external" = {
       subnet_id                 = azurerm_subnet.subnet["snet-external"].id
-      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-external"].id
+      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-security"].id
     }
     "snet-internal" = {
       subnet_id                 = azurerm_subnet.subnet["snet-internal"].id
-      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-internal"].id
+      network_security_group_id = azurerm_network_security_group.network_security_group["nsg-security"].id
     }
   }
 
