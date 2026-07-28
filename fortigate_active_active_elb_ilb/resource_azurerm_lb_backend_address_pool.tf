@@ -4,3 +4,7 @@ resource "azurerm_lb_backend_address_pool" "lb_backend_address_pool" {
   name            = each.value.name
   loadbalancer_id = each.value.loadbalancer_id
 }
+
+output "lb_backend_address_pools" {
+  value = var.enable_output ? azurerm_lb_backend_address_pool.lb_backend_address_pool[*] : null
+}

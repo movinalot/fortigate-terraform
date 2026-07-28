@@ -16,7 +16,7 @@ locals {
 
   fortigate_1_license_token = var.fortigate_1_license_token
   fortigate_2_license_token = var.fortigate_2_license_token
-  fortigate_license_type    = "payg" # can be "byol", "flex", or "payg"
+  fortigate_license_type    = "flex" # can be "byol", "flex", or "payg"
 
   forti_manager_ip     = ""
   forti_manager_serial = ""
@@ -27,7 +27,7 @@ locals {
     "fortigate" = {
       publisher = "fortinet"
       offer     = "fortinet_fortigate-vm"
-      sku       = "fortinet_fg-vm_payg_80_g2"
+      sku       = "fortinet_fg-vm_byol_80_g2"
       vm_size   = "Standard_F2als_v7"
       version   = "latest" # can be a version number, refer to README.md
     }

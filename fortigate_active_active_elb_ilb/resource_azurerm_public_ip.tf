@@ -7,6 +7,7 @@ resource "azurerm_public_ip" "public_ip" {
   name              = each.value.name
   allocation_method = each.value.allocation_method
   sku               = each.value.sku
+  zones             = each.value.zones
 }
 
 output "public_ips" {
