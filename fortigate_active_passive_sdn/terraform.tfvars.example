@@ -1,5 +1,5 @@
 
-resource_group_name = "rg-fortigate_single"
+resource_group_name = "rg-fortigate_ap_sdn"
 tags = {
   ResourceOwner      = "John Smith"
   Username           = "jsmith"
