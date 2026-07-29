@@ -16,7 +16,7 @@ locals {
 
   fortigate_1_license_token = var.fortigate_1_license_token
   fortigate_2_license_token = var.fortigate_2_license_token
-  fortigate_license_type    = "payg" # can be "byol", "flex", or "payg"
+  fortigate_license_type    = "flex" # can be "byol", "flex", or "payg"
 
   forti_manager_ip     = ""
   forti_manager_serial = ""
@@ -27,7 +27,7 @@ locals {
     "fortigate" = {
       publisher = "fortinet"
       offer     = "fortinet_fortigate-vm"
-      sku       = "fortinet_fg-vm_payg_80_g2"
+      sku       = "fortinet_fg-vm_byol_80_g2"
       vm_size   = "Standard_F2als_v7"
       version   = "latest" # can be a version number, refer to README.md
     }
@@ -137,7 +137,7 @@ locals {
           subnet_id                     = azurerm_subnet.subnet["snet-external"].id
           private_ip_address_allocation = "Static"
           private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-external"].address_prefixes[0], 4)
-          public_ip_address_id          = null
+          public_ip_address_id          = azurerm_public_ip.public_ip["pip-fgt_1_mgmt"].id
         }
       ]
     }
@@ -173,7 +173,7 @@ locals {
           subnet_id                     = azurerm_subnet.subnet["snet-external"].id
           private_ip_address_allocation = "Static"
           private_ip_address            = cidrhost(azurerm_subnet.subnet["snet-external"].address_prefixes[0], 5)
-          public_ip_address_id          = null
+          public_ip_address_id          = azurerm_public_ip.public_ip["pip-fgt_2_mgmt"].id
         }
       ]
     }
