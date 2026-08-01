@@ -298,7 +298,7 @@ locals {
 
   role_assignments = {
     "vm-fgt" = {
-      scope                = azurerm_resource_group.resource_group[local.resource_group_name].id
+      scope                = data.azurerm_subscription.subscription.id
       role_definition_name = "Contributor"
       principal_id         = azurerm_linux_virtual_machine.linux_virtual_machine["vm-fgt"].identity[0].principal_id
     }
