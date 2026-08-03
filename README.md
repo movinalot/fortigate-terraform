@@ -1,6 +1,19 @@
 # FortiGate Terraform for Azure
 
-There are multiple SKUs for FortiGate in Azure, make sure to select the correct one for your license type and desired version
+Azure RM Terraform Providers 5.0 and 4.0
+
+- There is no difference in the Azure RM provider 5.0 and 4.0 resources utilized for the FortiGate deployments.
+- Going forward changes/updates will only be made to the 5.0 provider.
+
+## 3 Nic HA A/P architecture
+
+The HA A/P deployments, SDN or ELB/ILB, utilize the 3 Nic architecture where both the HA Synchronization an HA Management services are configured on port3.
+
+This configuration allows for the utilization of 2-CPU/3-Nic Azure instances.
+
+## FortiGate SKUs/Plans
+
+There are multiple SKUs/Plans for FortiGate in Azure, make sure to select the correct one for your license type and desired version
 
 As of 2026-07-01, the latest available SKUs are:
 
