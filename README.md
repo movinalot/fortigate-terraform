@@ -5,6 +5,8 @@ Azure RM Terraform Providers 5.0 and 4.0
 - There is no difference in the Azure RM provider 5.0 and 4.0 resources utilized for the FortiGate deployments.
 - Going forward changes/updates will only be made to the 5.0 provider.
 
+In the 5.0 deployment directories the Terraform provider `local_sensitive_file` replaces Terraform provider `local_file` which was used in the 4.0 deployment directories. This Terraform provider in not related to or required by the Azure RM provider. The `local_sensitive_file` resource is used to output the generated FortiGate cloudinit file that is used during VM deployment.
+
 ## 3 Nic HA A/P architecture
 
 The HA A/P deployments, SDN or ELB/ILB, utilize the 3 Nic architecture where both the HA Synchronization an HA Management services are configured on port3.
@@ -17,7 +19,7 @@ There are multiple SKUs/Plans for FortiGate in Azure, make sure to select the co
 
 As of 2026-07-01, the latest available SKUs are:
 
-## 7.0
+### 7.0
 
 - 7.0.19
   - BYOL/FLEX
@@ -25,7 +27,7 @@ As of 2026-07-01, the latest available SKUs are:
   - PAYG
     - fortinet_fg-vm_payg_70 - Gen1 Intel/AMD
 
-## 7.2
+### 7.2
 
 - 7.2.13
   - BYOL/FLEX
@@ -35,7 +37,7 @@ As of 2026-07-01, the latest available SKUs are:
     - fortinet_fg-vm_payg_72 - Gen1 Intel/AMD
     - fortinet_fg-vm_payg_72_arm64 - Gen2 Arm64
 
-## 7.4
+### 7.4
 
 - 7.4.11
   - BYOL/FLEX
@@ -55,7 +57,7 @@ As of 2026-07-01, the latest available SKUs are:
     - fortinet_fg-vm_payg_74_g2 - Gen2 Intel/AMD
     - fortinet_fg-vm_payg_74_arm64 - Gen2 Arm64
 
-## 7.6
+### 7.6
 
 - 7.6.6
   - BYOL/FLEX
@@ -75,7 +77,7 @@ As of 2026-07-01, the latest available SKUs are:
     - fortinet_fg-vm_payg_76_g2 - Gen2 Intel/AMD
     - fortinet_fg-vm_payg_76_arm64 - Gen2 Arm64
 
-## 8.0
+### 8.0
 
 - 8.0.0
   - BYOL/FLEX
